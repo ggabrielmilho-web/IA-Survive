@@ -12,7 +12,8 @@ export default async function handler(req, res) {
       quizSessionId, 
       withOrderBump = false,
       userEmail,
-      userName
+      userName,
+      userPhone
     } = req.body
 
     // Validar dados obrigatórios
@@ -40,7 +41,28 @@ export default async function handler(req, res) {
       quizSessionId,
       email: user?.email || userEmail,
       name: user?.name || userName,
+      phone: userPhone,
       productType: withOrderBump ? 'diagnostic_with_ebook' : 'diagnostic'
+    }
+
+    // SALVAR DADOS DO USUÁRIO NO BANCO ANTES DO CHECKOUT
+    const { error: upsertError } = await supabaseAdmin
+      .from('users')
+      .upsert({
+        id: userId,
+        email: userEmail,
+        name: userName || null, // Pode vir vazio
+        phone: userPhone || null, // Pode vir vazio
+        updated_at: new Date().toISOString()
+      }, {
+        onConflict: 'id'
+      })
+
+    if (upsertError) {
+      console.error('Erro ao salvar dados do usuário:', upsertError)
+      // Continuar mesmo com erro no banco, pois checkout deve funcionar
+    } else {
+      console.log(`Dados salvos - Email: ${userEmail}, Nome: ${userName || 'vazio'}, Phone: ${userPhone || 'vazio'}`)
     }
 
     // Criar checkout no Mercado Pago

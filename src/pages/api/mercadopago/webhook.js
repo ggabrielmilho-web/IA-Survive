@@ -80,19 +80,43 @@ export default async function handler(req, res) {
 
       // Se pagamento aprovado, atualizar plano do usuário
       if (status === 'approved') {
-        const { error: userUpdateError } = await supabaseAdmin
+        // Extrair TODOS os dados do payer do Mercado Pago
+        const payerName = paymentData.payer?.first_name || 
+                         paymentData.payer?.name || 
+                         `${paymentData.payer?.first_name || ''} ${paymentData.payer?.last_name || ''}`.trim() || 
+                         null
+        
+        const payerEmail = paymentData.payer?.email || null
+        
+        const payerPhone = paymentData.payer?.phone ? 
+          `${paymentData.payer.phone.area_code || ''}${paymentData.payer.phone.number || ''}` : null
+
+        // UPSERT completo - salva TODOS os dados disponíveis
+        const updateData = {
+          plan: 'premium',
+          updated_at: new Date().toISOString()
+        }
+
+        // Só atualizar campos se tiver dados do MP (não sobrescrever com null)
+        if (payerEmail) updateData.email = payerEmail
+        if (payerName) updateData.name = payerName  
+        if (payerPhone) updateData.phone = payerPhone
+
+        const { data: updatedUser, error: userUpdateError } = await supabaseAdmin
           .from('users')
-          .update({ 
-            plan: 'premium',
-            updated_at: new Date().toISOString()
-          })
+          .update(updateData)
           .eq('id', userId)
+          .select()
+          .single()
 
         if (userUpdateError) {
           console.error('Erro ao atualizar plano do usuário:', userUpdateError)
+        } else {
+          console.log(`✅ Usuário ${userId} atualizado para PREMIUM`)
+          console.log(`📧 Email: ${updatedUser?.email || 'não informado'}`)
+          console.log(`👤 Nome: ${updatedUser?.name || 'não informado'}`) 
+          console.log(`📱 Phone: ${updatedUser?.phone || 'não informado'}`)
         }
-
-        console.log(`Usuário ${userId} atualizado para plano premium`)
       }
     }
 

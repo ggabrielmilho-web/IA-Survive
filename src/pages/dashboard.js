@@ -14,13 +14,23 @@ export default function Dashboard() {
   const [completedTasks, setCompletedTasks] = useState(new Set())
   
   useEffect(() => {
+    // Verificar se usuário está logado
+    const userEmail = localStorage.getItem('user_email')
+    const userPremium = localStorage.getItem('user_premium')
+    
+    if (!userEmail || userPremium !== 'true') {
+      router.push('/login')
+      return
+    }
+
     // Simular dados do usuário (em produção viria do Supabase)
     const mockQuizData = {
       isia: 6.3,
       riskLevel: 'moderate',
       answers: { area: 1, repetitive: 3, aiUsage: 2, humanInteraction: 1, digitalDependency: 4 },
       completedAt: new Date().toISOString(),
-      hasPremium: true
+      hasPremium: true,
+      userEmail: userEmail
     }
 
     setQuizData(mockQuizData)
@@ -142,15 +152,29 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-bold text-gradient">IA Survivor Dashboard</h1>
-                <p className="text-primary-gray">Bem-vindo de volta, Sobrevivente!</p>
-              </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-primary-red">
-                  ISIa® {quizData.isia}/10
-                </div>
-                <p className={`text-sm ${getRiskColor(quizData.riskLevel)}`}>
-                  {diagnosis?.title}
+                <p className="text-primary-gray">
+                  Bem-vindo de volta, {quizData?.userEmail}
                 </p>
+              </div>
+              <div className="text-right flex items-center gap-4">
+                <button
+                  onClick={() => {
+                    localStorage.removeItem('user_email')
+                    localStorage.removeItem('user_premium')
+                    router.push('/login')
+                  }}
+                  className="text-primary-gray hover:text-white text-sm transition-colors"
+                >
+                  Sair
+                </button>
+                <div>
+                  <div className="text-2xl font-bold text-primary-red">
+                    ISIa® {quizData.isia}/10
+                  </div>
+                  <p className={`text-sm ${getRiskColor(quizData.riskLevel)}`}>
+                    {diagnosis?.title}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

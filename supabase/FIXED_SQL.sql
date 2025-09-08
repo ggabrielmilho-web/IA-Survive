@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS public.users (
   id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   name TEXT,
+  phone TEXT,
   plan TEXT DEFAULT 'free' CHECK (plan IN ('free', 'premium')),
   profile_data JSONB DEFAULT '{}',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

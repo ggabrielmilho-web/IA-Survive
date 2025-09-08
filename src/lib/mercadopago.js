@@ -13,19 +13,18 @@ export const createPreference = async (items, userData = {}) => {
     const preferenceData = {
       items: items,
       back_urls: {
-        success: `${process.env.NEXTAUTH_URL}/success`,
-        failure: `${process.env.NEXTAUTH_URL}/failure`, 
-        pending: `${process.env.NEXTAUTH_URL}/pending`
+        success: `${process.env.NEXT_PUBLIC_APP_URL}/success`,
+        failure: `${process.env.NEXT_PUBLIC_APP_URL}/failure`, 
+        pending: `${process.env.NEXT_PUBLIC_APP_URL}/success`
       },
-      auto_return: "approved",
-      notification_url: `${process.env.NEXTAUTH_URL}/api/mercadopago/webhook`,
+      notification_url: `${process.env.NEXT_PUBLIC_APP_URL}/api/mercadopago/webhook`,
       external_reference: userData.userId || 'anonymous',
       payer: {
         name: userData.name || '',
         email: userData.email || '',
         phone: {
-          area_code: userData.phoneAreaCode || '',
-          number: userData.phoneNumber || ''
+          area_code: userData.phone ? userData.phone.substring(0, 2) : '11',
+          number: userData.phone ? userData.phone.substring(2) : ''
         },
         address: {
           street_name: userData.streetName || '',

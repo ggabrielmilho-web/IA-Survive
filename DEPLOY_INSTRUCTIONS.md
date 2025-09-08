@@ -68,12 +68,14 @@ NEXT_PUBLIC_APP_URL=https://survivor.carvalhoia.com
 
 ## ✅ **CHECKLIST PRÉ-DEPLOY:**
 
-- [x] Supabase configurado
-- [x] PDF generation funcionando  
-- [ ] Credenciais Mercado Pago
-- [ ] DNS configurado
+- [x] Supabase configurado e testado
+- [x] PDF generation funcionando (6 páginas)
+- [x] Credenciais Mercado Pago configuradas
+- [x] Checkout testado e funcionando
+- [x] Webhook com validação de assinatura
+- [ ] DNS configurado (survivor.carvalhoia.com)
 - [ ] Deploy no Vercel
-- [ ] Teste do webhook MP
+- [ ] Teste do webhook MP em produção
 - [ ] Teste fluxo completo
 
 ---
