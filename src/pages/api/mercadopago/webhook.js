@@ -1,5 +1,6 @@
 import { getPaymentInfo } from '../../../lib/mercadopago'
 import { supabaseAdmin } from '../../../lib/supabase'
+import crypto from 'crypto'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -7,6 +8,29 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Verificar assinatura do webhook (opcional, para maior segurança)
+    const webhookSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET
+    if (webhookSecret) {
+      const signature = req.headers['x-signature']
+      const requestId = req.headers['x-request-id']
+      
+      if (signature && requestId) {
+        const dataID = req.body?.data?.id
+        const ts = signature.split(',')[0].split('=')[1]
+        const hash = signature.split(',')[1].split('=')[1]
+        
+        const manifest = `id:${dataID};request-id:${requestId};ts:${ts};`
+        const hmac = crypto.createHmac('sha256', webhookSecret)
+        hmac.update(manifest)
+        const sha = hmac.digest('hex')
+        
+        if (sha !== hash) {
+          console.error('Assinatura do webhook inválida')
+          return res.status(401).json({ error: 'Unauthorized' })
+        }
+      }
+    }
+
     console.log('Webhook recebido:', req.body)
 
     const { type, data } = req.body

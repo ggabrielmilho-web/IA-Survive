@@ -9,6 +9,23 @@
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@supabase-anon-key",
     "SUPABASE_SERVICE_ROLE_KEY": "@supabase-service-key",
     "MERCADOPAGO_ACCESS_TOKEN": "@mercadopago-access-token",
-    "NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY": "@mercadopago-public-key"
-  }
+    "NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY": "@mercadopago-public-key",
+    "NEXT_PUBLIC_APP_URL": "@app-url"
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "X-Requested-With, Content-Type, Authorization" }
+      ]
+    }
+  ]
 }
