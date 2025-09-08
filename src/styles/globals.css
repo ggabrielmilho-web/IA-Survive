@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
+  background-color: #0A0A0A;
+  color: #FFFFFF;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+.bg-gradient-apocalypse {
+  background: linear-gradient(135deg, #0A0A0A 0%, #1C1C1E 50%, #8B0000 100%);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #FF3B30, #FFD60A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.btn-primary {
+  @apply bg-primary-red hover:bg-secondary-red-dark text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 animate-pulse-glow;
+}
+
+.btn-secondary {
+  @apply bg-transparent border-2 border-primary-red text-primary-red hover:bg-primary-red hover:text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200;
+}
+
+.card-dark {
+  @apply bg-secondary-gray-dark border border-primary-gray/20 rounded-lg p-6 backdrop-blur-sm;
+}
+
+.input-dark {
+  @apply bg-secondary-gray-dark border border-primary-gray/30 text-white placeholder-primary-gray rounded-lg px-4 py-3 focus:border-primary-red focus:outline-none transition-colors;
+}

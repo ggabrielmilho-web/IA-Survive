@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "src/pages/api/**/*.js": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": "@supabase-url",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@supabase-anon-key",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase-service-key",
+    "MERCADOPAGO_ACCESS_TOKEN": "@mercadopago-access-token",
+    "NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY": "@mercadopago-public-key"
+  }
+}
