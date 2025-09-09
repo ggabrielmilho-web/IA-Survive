@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  ia-survivor:
+    build: .
+    image: ia-survivor:latest
+    container_name: ia-survivor
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_SUPABASE_URL=https://kadtoeurkvwxeynjectu.supabase.co
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImthZHRvZXVya3Z3eGV5bmplY3R1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI2MDA5NzEsImV4cCI6MjA2ODE3Njk3MX0.qbKPi22EW_izttL72PqWak_MJR-PwR01IGI8BQ7ag9o
+      - SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImthZHRvZXVya3Z3eGV5bmplY3R1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MjYwMDk3MSwiZXhwIjoyMDY4MTc2OTcxfQ.N98pWxGmKcubdhTsFRGRyInpqqRUd1q5zwaheJ4W3pA
+      - NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY=APP_USR-f6ce755f-f20b-4856-bac4-d6a0b32b1c13
+      - MERCADOPAGO_ACCESS_TOKEN=APP_USR-7810557650029226-080707-bee55d28f3378feb485ac0cd51108f2e-344879246
+      - MERCADOPAGO_WEBHOOK_SECRET=7005778b7c6382e814c78cfb6f96952da35ef7f71ae6858a857caddbe2f56dcb
+      - NEXT_PUBLIC_APP_URL=https://survivor.carvalhoia.com
+    ports:
+      - "5050:3000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ia-survivor.rule=Host(`survivor.carvalhoia.com`)"
+      - "traefik.http.routers.ia-survivor.tls=true"
+      - "traefik.http.routers.ia-survivor.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.ia-survivor.entrypoints=websecure"
+      - "traefik.http.services.ia-survivor.loadbalancer.server.port=3000"
+      - "traefik.docker.network=traefik"
+    networks:
+      - traefik
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  traefik:
+    external: true
