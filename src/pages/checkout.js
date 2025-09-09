@@ -37,9 +37,17 @@ export default function Checkout() {
     setLoading(true)
 
     try {
-      // Simular criação de sessão de usuário
-      const userId = 'temp-' + Date.now()
-      const quizSessionId = 'session-' + Date.now()
+      // Gerar UUIDs válidos para compatibilidade com PostgreSQL
+      const generateUUID = () => {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          const r = Math.random() * 16 | 0;
+          const v = c == 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+        });
+      }
+      
+      const userId = generateUUID()
+      const quizSessionId = generateUUID()
 
       // Criar checkout
       const response = await fetch('/api/mercadopago/create-checkout', {
